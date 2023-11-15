@@ -26,3 +26,11 @@ mongoose
 app.get("/", (request, response) => {
     res.send("node api");
   });
+
+  const loginRoute = require("./route/loginRoute");
+  const signupRoute = require("./route/signupRoute");
+
+  app.use("/api",loginRoute);
+  app.use("/api",signupRoute);
+
+  
