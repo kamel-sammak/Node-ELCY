@@ -43,7 +43,8 @@ router.post("/login", async (request, response) => {
                 role: "customer",
                 message: "Customer login successful",
                 id: customer._id,
-                name: `${customer.firstName} ${customer.lastName}`
+                name: `${customer.firstName} ${customer.lastName}`,
+                token
             });
         }
 
