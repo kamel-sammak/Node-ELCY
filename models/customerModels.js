@@ -9,14 +9,14 @@ const customerSchema = new mongoose.Schema({
         type: String,
         required: [false, "please enter user lastName !"]
     },
-    motherName: {
-        type: String,
-        required: [false, "please enter user motherName  !"]
-    },
-    fatherName: {
-        type: String,
-        required: [false, "please enter user fatherName !"]
-    },
+    // motherName: {
+    //     type: String,
+    //     required: [false, "please enter user motherName  !"]
+    // },
+    // fatherName: {
+    //     type: String,
+    //     required: [false, "please enter user fatherName !"]
+    // },
     gender: {
         type: String,
         required: [false, "please enter gender !"]
@@ -25,11 +25,6 @@ const customerSchema = new mongoose.Schema({
         type: String,
         required: [false, "please enter phoneNumber !"]
     },
- 
-    nationalNumber: {
-        type: Number,
-        required: [false, "please enter nationalNumber !"]
-    },
     password: {
         type: String,
         required: [false, "please enter password !"]
@@ -37,6 +32,14 @@ const customerSchema = new mongoose.Schema({
     email: {
         type: String,
         required: [false, "please enter email !"]
+    },
+    birthday: {
+        type: Date,
+        required: [false, "please enter age !"]
+    },
+    address: {
+        type: String,
+        required: [false, "please enter address !"]
     },
 
     });
