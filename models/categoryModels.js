@@ -6,7 +6,11 @@ const categorySchema = new mongoose.Schema({
     imageUrl: { type: String },
     specialties: [{
         id: { type: Number },
-        name: { type: String }
+        name: { type: String },
+        company:[{
+            id: { type: Number },
+            name: { type: String }
+        }]
     }]
 });
 const Category = mongoose.model('Category', categorySchema);

@@ -1,22 +1,24 @@
 const mongoose = require('mongoose');
 const postSchema = new mongoose.Schema({
 
-    post: {
-        type: String,
-        required: [true, "Please enter the post"],
-      },
-  
 
-    name: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "name",
-        required: [false, "Please enter the hospitalName ID"],
-      },  
+  content: {
+    type: String,
+    //     required: [true, "Please enter the post"],
+  },
+
+  title: { type: String },
 
 
-      
+  company: {
+    type: mongoose.Schema.Types.ObjectId,
+
+  },
+
+  //isLike: { type: Boolean }
 
 
-    });
-const Post = mongoose.model('post',postSchema);
+
+});
+const Post = mongoose.model('post', postSchema);
 module.exports = Post;

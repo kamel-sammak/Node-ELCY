@@ -30,7 +30,7 @@ router.post("/login", async (request, response) => {
             response.cookie('jwt', token, { httpOnly: true, maxAge: 3600000 }); // 1 hour in milliseconds
 
             return response.status(200).json({
-                role: "customer",
+                // role: "customer",
                 message: "Customer login successful",
                 id: customer._id,
                 name: `${customer.firstName} ${customer.lastName}`,

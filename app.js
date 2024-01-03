@@ -34,6 +34,7 @@ const forgotPasswordRoute = require("./route/forgotPasswordRoute");
 const serviceRoute = require("./route/serviceRoute");
 const categoryRoute = require("./route/categoryRoute");
 const companyRoute = require("./route/companyRoute");
+const postRoute = require("./route/postRoute");
 
 app.use("/api", loginRoute);
 app.use("/api", signupRoute);
@@ -41,3 +42,4 @@ app.use("/api", forgotPasswordRoute);
 app.use("/api", serviceRoute);
 app.use("/api", categoryRoute);
 app.use("/api", companyRoute);
+app.use("/api", postRoute);
