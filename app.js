@@ -3,8 +3,13 @@ const mongoose = require("mongoose");
 const app = express();
 const port = 3000;
 const databaseUrl = "mongodb://127.0.0.1:27017/ELCY";
+const path = require('path');
 
 
+
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 //use middleware
 app.use(express.json()); // this to active send data with json type
@@ -35,6 +40,8 @@ const serviceRoute = require("./route/serviceRoute");
 const categoryRoute = require("./route/categoryRoute");
 const companyRoute = require("./route/companyRoute");
 const postRoute = require("./route/postRoute");
+const fileRoutes = require("./route/file-upload-routes");
+const imageRoute = require("./route/ImageRoute");
 
 app.use("/api", loginRoute);
 app.use("/api", signupRoute);
@@ -43,3 +50,6 @@ app.use("/api", serviceRoute);
 app.use("/api", categoryRoute);
 app.use("/api", companyRoute);
 app.use("/api", postRoute);
+//app.use("/api", fileUploadRoutes);
+app.use('/api', fileRoutes.routes);
+app.use('/api',imageRoute);
