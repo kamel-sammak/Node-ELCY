@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const Service = require("../models/serviceModels");
+<<<<<<< HEAD
 const multer = require('multer');
 const Image = require('../models/imageModels');
 
@@ -70,6 +71,11 @@ router.post("/addService", async (request, response) => {
 
 
 router.post("/addServiceOLD", async (request, response) => {
+=======
+
+
+router.post("/addService", async (request, response) => {
+>>>>>>> 951345f33aae34e7c2ba4e37a03a826fb7bc9512
     try {
         const { name } = request.body;
 
