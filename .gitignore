@@ -1,3 +1,9 @@
 //folders and files don't push to git
 node_modules
 package-lock.json
+multiplefile.js
+singlefile.js
+controllers
+helpers
+file-upload-routes.js
+uploads
