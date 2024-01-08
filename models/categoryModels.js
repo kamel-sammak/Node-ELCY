@@ -7,9 +7,12 @@ const categorySchema = new mongoose.Schema({
     specialties: [{
         id: { type: Number },
         name: { type: String },
-        company:[{
+        imageUrl: { type: String },
+        company: [{
             id: { type: Number },
-            name: { type: String }
+            name: { type: String },
+            imageUrl: { type: String },
+
         }]
     }]
 });

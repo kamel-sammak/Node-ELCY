@@ -52,7 +52,7 @@ router.post("/addService", async (request, response) => {
                 const service = await Service.create({
                     id: request.body.id,
                     name: request.body.name,
-                    imageUrl: 'http://localhost:3000/uploads/' + newImage.name + '.' + newImage.image.contentType.split('/')[1], // Set the image URL in the service document
+                    imageUrl: '/uploads/' + newImage.name + '.' + newImage.image.contentType.split('/')[1], // Set the image URL in the service document
                     image: newImage,
                 });
                 response.status(200).json(service);
@@ -131,6 +131,25 @@ router.delete("/deleteService/:id", async (request, response) => {
         if (!service) {
             return response.status(404).json({ message: "Service not found" });
         }
+
+        response.status(200).json({ message: `Deleted service: ${service.name}` });
+    } catch (error) {
+        response.status(500).json({ message: error.message });
+    }
+});
+
+
+router.delete("/deleteService1/:name", async (request, response) => {
+    try {
+        const { name } = request.params;
+        const service = await Service.findOneAndDelete({ name });
+
+        if (!service) {
+            return response.status(404).json({ message: "Service not found" });
+        }
+
+        // Delete associated image
+        await Image.findOneAndDelete({ name });
 
         response.status(200).json({ message: `Deleted service: ${service.name}` });
     } catch (error) {
