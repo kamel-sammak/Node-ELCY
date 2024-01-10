@@ -21,7 +21,7 @@ const upload = multer({
 }).single('image');
 
 
-router.post("/addCategory", async (request, response) => {
+router.post("/addCategory2", async (request, response) => {
     try {
         upload(request, response, async (err) => {
             if (err) {
@@ -60,7 +60,7 @@ router.post("/addCategory", async (request, response) => {
                 const category = await Category.create({
                     name,
                     serviceId,
-                    imageUrl: 'http://localhost:3000/uploads/' + newImage.name + '.' + newImage.image.contentType.split('/')[1],
+                    imageUrl: '/uploads/' + newImage.name + '.' + newImage.image.contentType.split('/')[1],
                     image: newImage,
                     specialties,
 
@@ -119,7 +119,7 @@ router.post("/addCategory1", async (request, response) => {
                 const category = await Category.create({
                     name,
                     serviceId,
-                    imageUrl: 'http://localhost:3000/uploads/' + newImage.name + '.' + newImage.image.contentType.split('/')[1],
+                    imageUrl: '/uploads/' + newImage.name + '.' + newImage.image.contentType.split('/')[1],
                     image: newImage,
                     specialties
                 });
@@ -139,7 +139,7 @@ router.post("/addCategory1", async (request, response) => {
 
 
 
-router.post("/addCategoryOLD", async (request, response) => {
+router.post("/addCategory", async (request, response) => {
     try {
         const { name, serviceId } = request.body;
 
@@ -186,7 +186,7 @@ router.post("/addCategoryOnly", async (request, response) => {
         }
 
         // If no existing category and service, create a new category with only name and serviceId
-        const category = await Category.create({ name, serviceId });
+        const category = await Category.create({ name, serviceId, imageUrl });
 
         response.status(200).json({ name, serviceId });
     } catch (error) {
@@ -203,6 +203,7 @@ router.get("/getAllCategory", async (request, response) => {
             const formattedCategory = category.map(category => ({
                 id: category._id,
                 name: category.name,
+                imageUrl: category.imageUrl
                 // serviceId: category.serviceId,
                 // imageUrl: category.imageUrl
             }));
@@ -228,6 +229,7 @@ router.get("/getAllCategory/:id", async (request, response) => {
             const formattedCategories = categories.map(category => ({
                 id: category._id,
                 name: category.name,
+                imageUrl: category.imageUrl
                 // Add other fields as needed
             }));
 
@@ -250,7 +252,7 @@ router.get("/getAllSpecialties/:id", async (req, res) => {
         if (category) {
             const { _id, specialties } = category;
             // Remove the 'company' field from each specialty
-            const modifiedSpecialties = specialties.map(({ name, _id }) => ({ name, _id }));
+            const modifiedSpecialties = specialties.map(({ imageUrl,name, _id }) => ({ name, _id ,imageUrl }));
 
             res.status(200).json({ _id, specialties: modifiedSpecialties });
         } else {

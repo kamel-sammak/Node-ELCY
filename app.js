@@ -52,4 +52,5 @@ app.use("/api", companyRoute);
 app.use("/api", postRoute);
 //app.use("/api", fileUploadRoutes);
 app.use('/api', fileRoutes.routes);
+app.use('/api', imageRoute);
 
