@@ -302,19 +302,14 @@ router.get("/getAllSpecialties/:id", async (req, res) => {
 
 
 
-
-
-router.put("/editCategory/:id", async (request, response) => {
+router.put("/editCategory1/:id", async (request, response) => {
     try {
         const { id } = request.params;
-        const category = await Category.findByIdAndUpdate(id, request.body, { new: true });
-
+        const category = await Category.findByIdAndUpdate(id, request.body);
         if (!category)
-            response.status(404).json({ message: `Cannot find category with id ${id}!` });
+            response.status(404).json({ message: `cannot find user with id ${id} !` });
         else {
-            // Use Category model to find the updated category by id and convert to plain object
-            const newCategory = await Category.findById(id).lean();
-
+            const newCategory = await Category.findById(id);
             response.status(200).json(newCategory);
         }
     } catch (error) {
@@ -324,16 +319,18 @@ router.put("/editCategory/:id", async (request, response) => {
 
 
 
-
-
 router.delete("/deleteCategory/:id", async (request, response) => {
     try {
         const { id } = request.params;
         const category = await Category.findByIdAndDelete(id);
-        response.status(200).json(category);
+
+        if (!category) {
+            return response.status(404).json({ message: "category not found" });
+        }
+
+        response.status(200).json({ message: "Deleted category" });
     } catch (error) {
         response.status(500).json({ message: error.message });
     }
 });
-
 module.exports = router;
