@@ -43,6 +43,8 @@ const postRoute = require("./route/postRoute");
 const fileRoutes = require("./route/file-upload-routes");
 const imageRoute = require("./route/ImageRoute");
 const MedicalCategoryRoute = require("./route/MedicalCategoryRoute");
+const GroupRoute = require("./route/GroupRoute");
+const DrugRoute = require("./route/DrugRoute")
 
 app.use("/api", loginRoute);
 app.use("/api", signupRoute);
@@ -55,4 +57,6 @@ app.use("/api", postRoute);
 app.use('/api', fileRoutes.routes);
 app.use('/api', imageRoute);
 app.use("/api", MedicalCategoryRoute);
+app.use("/api",GroupRoute);
+app.use("/api",DrugRoute);
 
