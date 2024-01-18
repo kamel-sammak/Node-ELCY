@@ -8,7 +8,13 @@ const categorySchema = new mongoose.Schema({
         id: { type: Number },
         name: { type: String },
         imageUrl: { type: String },
-        company: [{ }]
+        company: [{
+            id: { type: Number },
+            name: { type: String },
+            imageUrl: { type: String },
+            email: { type: String },
+            password: { type: String }
+        }]
     }]
 });
 const Category = mongoose.model('Category', categorySchema);
