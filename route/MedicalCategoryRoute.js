@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Service = require("../models/serviceModels");
-const MedicalCategory = require("../models/MedicalCategory");
+const MedicalCategory = require("../models/MedicalCategoryModels");
 
 
 

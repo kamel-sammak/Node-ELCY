@@ -42,6 +42,6 @@ const customerSchema = new mongoose.Schema({
         required: [false, "please enter address !"]
     },
 
-    });
-const Customer = mongoose.model('Customer',customerSchema);
+});
+const Customer = mongoose.model('Customer', customerSchema);
 module.exports = Customer;

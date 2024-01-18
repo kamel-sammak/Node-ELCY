@@ -56,23 +56,23 @@ router.post("/addPost/:companyId", async (req, res) => {
 
 router.get('/getAllPost/:companyId', async (request, response) => {
     try {
-      const { companyId } = request.params;
-  
-      const post = await Post.find({ company: companyId }, 'content title');
-  
-      if (post.length === 0) {
-        return response.status(404).json({ message: 'No post found for the given companyId' });
-      }
-  
-      response.status(200).json({post});
+        const { companyId } = request.params;
+
+        const post = await Post.find({ company: companyId }, 'content title');
+
+        if (post.length === 0) {
+            return response.status(404).json({ message: 'No post found for the given companyId' });
+        }
+
+        response.status(200).json({ post });
     } catch (error) {
-      response.status(500).json({ message: error.message });
+        response.status(500).json({ message: error.message });
     }
-  });
+});
 
 
 
-  router.put("/editPost/:id", async (request, response) => {
+router.put("/editPost/:id", async (request, response) => {
     try {
         const { id } = request.params;
         const post = await Post.findByIdAndUpdate(id, request.body);

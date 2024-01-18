@@ -125,8 +125,8 @@ router.get("/getAllCompanies/:id", async (req, res) => {
             findCat = true
 
             category.specialties.forEach(specialtie => {
-                if(id == specialtie._id)
-                allCompanies = specialtie.company
+                if (id == specialtie._id)
+                    allCompanies = specialtie.company
             });
         });
         if (findCat) res.status(200).json(allCompanies);
@@ -155,7 +155,7 @@ router.get("/getAllCompanies/:id", async (req, res) => {
 //                 specialtie.company.push({"name" : name})
 //                 newCategory = Category.findByIdAndUpdate(category._id, category);
 //             });
-            
+
 //             res.status(200).json(newCategory);
 //         });
 //         // if (category) res.status(200).json(category);

@@ -252,7 +252,7 @@ router.get("/getAllSpecialties/:id", async (req, res) => {
         if (category) {
             const { _id, specialties } = category;
             // Remove the 'company' field from each specialty
-            const modifiedSpecialties = specialties.map(({ imageUrl,name, _id }) => ({ name, _id ,imageUrl }));
+            const modifiedSpecialties = specialties.map(({ imageUrl, name, _id }) => ({ name, _id, imageUrl }));
 
             res.status(200).json({ _id, specialties: modifiedSpecialties });
         } else {

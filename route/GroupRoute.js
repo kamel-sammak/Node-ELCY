@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const MedicalCategory = require("../models/MedicalCategory");
+const MedicalCategory = require("../models/MedicalCategoryModels");
 
 
 router.post("/addItemAndSignup/:idPharmacies", async (request, response) => {

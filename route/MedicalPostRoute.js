@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const MedicalCategory = require("../models/MedicalCategoryModels");
-const Drugs = require("../models/DrugsModels");
+const MedicalPost = require("../models/MedicalPostModels");
 
 
-router.post("/addDrug/:groupId", async (req, res) => {
+router.post("/addPostToGroup/:groupId", async (req, res) => {
     try {
         const { groupId } = req.params;
-        const { name, imageUrl } = req.body;
+        const { title, content } = req.body;
 
         // Find the medical category with the specified groupId
         const medicalCategory = await MedicalCategory.findOne({ "group._id": groupId });
@@ -26,20 +26,20 @@ router.post("/addDrug/:groupId", async (req, res) => {
         // Assuming you have a 'schedule' field in the Group model
         foundGroup.schedule = foundGroup.schedule || [];
 
-        // Create a new drug instance and associate it with the group
-        const newDrug = new Drugs({ name, imageUrl });
+        // Create a new MedicalPost instance and associate it with the group
+        const newMedicalPost = new MedicalPost({ title, content });
 
-        // Add the groupId to the newDrug
-        newDrug.group = groupId;
+        // Add the groupId to the newMedicalPost
+        newMedicalPost.group = groupId;
 
-        // Add the new drug to the schedule
-        foundGroup.schedule.push(newDrug);
+        // Add the new MedicalPost to the schedule
+        foundGroup.schedule.push(newMedicalPost);
 
-        // Save the updated category and the new drug
-        await Promise.all([medicalCategory.save(), newDrug.save()]);
+        // Save the updated category and the new MedicalPost
+        await Promise.all([medicalCategory.save(), newMedicalPost.save()]);
 
         // Include groupId in the response
-        res.status(200).json(newDrug);
+        res.status(200).json(newMedicalPost);
     } catch (error) {
         console.error(error.message);
         res.status(500).json({ message: error.message });
@@ -47,36 +47,31 @@ router.post("/addDrug/:groupId", async (req, res) => {
 });
 
 
-
-router.get('/getAllDrug/:groupId', async (request, response) => {
+router.get('/getAllMedicalPost/:groupId', async (request, response) => {
     try {
         const { groupId } = request.params;
 
-        const drugs = await Drugs.find({ group: groupId }, 'name imageUrl');
+        const medicalPost = await MedicalPost.find({ group: groupId });
 
-        if (drugs.length === 0) {
-            return response.status(404).json({ message: 'No drugs found for the given groupId' });
+        if (medicalPost.length === 0) {
+            return response.status(404).json({ message: 'No medicalPost found for the given groupId' });
         }
 
-        response.status(200).json({ drugs });
+        response.status(200).json({ medicalPost });
     } catch (error) {
         response.status(500).json({ message: error.message });
     }
 });
 
-
-
-
-
-router.put("/editDrug/:id", async (request, response) => {
+router.put("/editMedicalPost/:id", async (request, response) => {
     try {
         const { id } = request.params;
-        const drugs = await Drugs.findByIdAndUpdate(id, request.body);
-        if (!drugs)
+        const medicalPost = await MedicalPost.findByIdAndUpdate(id, request.body);
+        if (!medicalPost)
             response.status(404).json({ message: `cannot find user with id ${id} !` });
         else {
-            const newDrugs = await Drugs.findById(id);
-            response.status(200).json(newDrugs);
+            const newMedicalPost = await MedicalPost.findById(id);
+            response.status(200).json(newMedicalPost);
         }
     } catch (error) {
         response.status(500).json({ message: error.message });
@@ -84,21 +79,20 @@ router.put("/editDrug/:id", async (request, response) => {
 });
 
 
-router.delete("/deleteDrug/:id", async (request, response) => {
+router.delete("/deleteMedicalPost/:id", async (request, response) => {
     try {
         const { id } = request.params;
-        const drugs = await Drugs.findByIdAndDelete(id);
+        const medicalPost = await MedicalPost.findByIdAndDelete(id);
 
-        if (!drugs) {
-            return response.status(404).json({ message: "drugs not found" });
+        if (!medicalPost) {
+            return response.status(404).json({ message: "medicalPost not found" });
         }
 
-        response.status(200).json({ message: "Deleted drugs" });
+        response.status(200).json({ message: "Deleted medicalPost" });
     } catch (error) {
         response.status(500).json({ message: error.message });
     }
 });
-
 
 
 module.exports = router;
