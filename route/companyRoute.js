@@ -5,15 +5,19 @@ const Company = require("../models/companyModels");
 const Category = require("../models/categoryModels");
 
 
-router.post("/addCompanies", async (req, res) => {
+router.post("/addCompaniesAndSignup/:SpecialtiesId", async (req, res) => {
     try {
-        const { SpecialtiesId, name } = req.body;
+        const { name, imageUrl, email, password } = req.body;
+        const { SpecialtiesId } = req.params;
+
+        // Find the category with the specified specialty
         const category = await Category.findOne({ "specialties._id": SpecialtiesId });
 
         if (!category) {
             return res.status(404).json({ message: "Specialty with the specified ID not found in any category" });
         }
 
+        // Find the specialty within the category
         const specialty = category.specialties.find(spec => spec._id.toString() === SpecialtiesId);
 
         if (!specialty) {
@@ -27,8 +31,32 @@ router.post("/addCompanies", async (req, res) => {
             return res.status(400).json({ message: "A company with the same name already exists in the specialty" });
         }
 
-        // Create a new company
-        const newCompany = new Company({ name });
+        // Check if a company with the same email already exists in the specialty
+        const companyWithSameEmail = specialty.company.find(company => company.email === email);
+
+        if (companyWithSameEmail) {
+            return res.status(400).json({ message: "A user with the same email already exists in the specialty. Please choose a different one or log in." });
+        }
+
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ message: "Invalid email format. Please provide a valid email address with exactly one '@' symbol." });
+        }
+
+        // Validate password length
+        if (password.length < 8) {
+            return res.status(400).json({ message: "Password must be at least 8 characters long." });
+        }
+
+        // Validate password format (should contain both letters and numbers)
+        const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d).+$/;
+        if (!passwordRegex.test(password)) {
+            return res.status(400).json({ message: "Password must contain both letters and numbers." });
+        }
+
+        // Create a new company with imageUrl, email, and password
+        const newCompany = new Company({ name, imageUrl, email, password });
 
         // Add the new company to the specialty
         specialty.company.push(newCompany);
@@ -42,6 +70,48 @@ router.post("/addCompanies", async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 });
+
+
+
+
+// router.post("/addCompanies", async (req, res) => {
+//     try {
+//         const { SpecialtiesId, name, imageUrl } = req.body;
+//         const category = await Category.findOne({ "specialties._id": SpecialtiesId });
+
+//         if (!category) {
+//             return res.status(404).json({ message: "Specialty with the specified ID not found in any category" });
+//         }
+
+//         const specialty = category.specialties.find(spec => spec._id.toString() === SpecialtiesId);
+
+//         if (!specialty) {
+//             return res.status(404).json({ message: "Specialty with the specified ID not found in the category" });
+//         }
+
+//         // Check if a company with the same name already exists in the specialty
+//         const existingCompany = specialty.company.find(company => company.name === name);
+
+//         if (existingCompany) {
+//             return res.status(400).json({ message: "A company with the same name already exists in the specialty" });
+//         }
+
+//         // Create a new company with imageUrl
+//         const newCompany = new Company({ name, imageUrl });
+
+//         // Add the new company to the specialty
+//         specialty.company.push(newCompany);
+
+//         // Save the updated category
+//         await category.save();
+
+//         res.status(200).json(newCompany);
+//     } catch (error) {
+//         console.error(error.message);
+//         res.status(500).json({ message: error.message });
+//     }
+// });
+
 
 
 

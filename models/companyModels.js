@@ -4,10 +4,8 @@ const companySchema = new mongoose.Schema({
     specialtiesId: { type: String },
     name: { type: String },
     imageUrl: { type: String },
-    company: [{
-        id: { type: Number },
-        name: { type: String }
-    }]
+    password: { type: String },
+    email: { type: String }
 });
 //عدد سنوات اكثر يتم ترتبيها(queue)
 //عداد على الطلبات

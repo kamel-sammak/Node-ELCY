@@ -8,6 +8,8 @@ const MedicalCategorySchema = new mongoose.Schema({
         id: { type: Number },
         name: { type: String },
         imageUrl: { type: String },
+        email: { type: String },
+        password: { type: String }
     }]
 });
 const MedicalCategory = mongoose.model('MedicalCategory', MedicalCategorySchema);
