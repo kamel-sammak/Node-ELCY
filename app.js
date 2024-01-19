@@ -46,6 +46,7 @@ const MedicalCategoryRoute = require("./route/MedicalCategoryRoute");
 const GroupRoute = require("./route/GroupRoute");
 const DrugRoute = require("./route/DrugsRoute");
 const MedicalPost = require("./route/MedicalPostRoute");
+const customer = require("./route/customerRoute");
 
 app.use("/api", loginRoute);
 app.use("/api", signupRoute);
@@ -61,5 +62,6 @@ app.use("/api", MedicalCategoryRoute);
 app.use("/api", GroupRoute);
 app.use("/api", DrugRoute);
 app.use("/api", MedicalPost);
+app.use("/api", customer);
 
 

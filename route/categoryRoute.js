@@ -302,7 +302,7 @@ router.get("/getAllSpecialties/:id", async (req, res) => {
 
 
 
-router.put("/editCategory1/:id", async (request, response) => {
+router.put("/editCategory/:id", async (request, response) => {
     try {
         const { id } = request.params;
         const category = await Category.findByIdAndUpdate(id, request.body);
