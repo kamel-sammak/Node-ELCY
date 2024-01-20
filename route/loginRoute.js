@@ -22,19 +22,21 @@ router.post("/login", async (request, response) => {
         const customer = await Customer.findOne({ email, password });
 
         if (customer) {
+            // Generate an access token with the customer information
+            const accessToken = generateAccessToken(customer);
 
-            // Generate a JWT token with the customer information
-            const token = jwt.sign({ id: customer._id, role: "customer" }, 'your-secret-key', { expiresIn: '1h' });
+            // Generate a refresh token
+            const refreshToken = generateRefreshToken(customer);
 
-            // Set the token as an HttpOnly cookie for better security
-            response.cookie('jwt', token, { httpOnly: true, maxAge: 3600000 }); // 1 hour in milliseconds
+            // Set the refresh token as an HttpOnly cookie for better security
+            response.cookie('refreshToken', refreshToken, { httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000 }); // 30 days in milliseconds
 
             return response.status(200).json({
-                // role: "customer",
+                role: "customer",
                 message: "Customer login successful",
                 id: customer._id,
                 name: `${customer.firstName} ${customer.lastName}`,
-                token
+                accessToken
             });
         }
 
@@ -45,13 +47,15 @@ router.post("/login", async (request, response) => {
     }
 });
 
-//access
-//ref
+// Function to generate an access token
+function generateAccessToken(customer) {
+    return jwt.sign({ id: customer._id, role: "customer" }, 'your-secret-key', { expiresIn: '1h' });
+}
 
-
-
-
-
+// Function to generate a refresh token
+function generateRefreshToken(customer) {
+    return jwt.sign({ id: customer._id, role: "customer" }, 'your-refresh-secret-key', { expiresIn: '30d' });
+}
 
 
 

@@ -64,7 +64,19 @@ router.get('/getAllDrug/:groupId', async (request, response) => {
     }
 });
 
-
+router.get("/getDrug_info/:id", async (request, response) => {
+    try {
+        const { id } = request.params;
+        const drugs = await Drugs.findById(id);
+        if (!drugs) {
+            return response.status(404).json({ message: "drugs not found" });
+        }
+        response.status(200).json(drugs);
+    } catch (error) {
+        console.log(error.message);
+        response.status(500).json({ message: error.message });
+    }
+});
 
 
 

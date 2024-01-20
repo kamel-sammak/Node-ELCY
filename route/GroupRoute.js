@@ -114,6 +114,31 @@ router.get("/getAllGroup/:id", async (req, res) => {
     }
 });
 
+router.get("/getGroup_info/:groupId", async (req, res) => {
+    try {
+        const { groupId } = req.params;
+        const medicalCategory = await MedicalCategory.findOne({ "group._id": groupId });
+
+        if (medicalCategory) {
+            const group = medicalCategory.group.find(group => group._id == groupId);
+
+            if (group) {
+                const { _id, email, password, imageUrl, name } = group;
+                const modifiedGroup = { _id, email, password, imageUrl, name };
+
+                res.status(200).json(modifiedGroup);
+            } else {
+                res.status(404).json({ message: "Can't find group" });
+            }
+        } else {
+            res.status(404).json({ message: "Can't find medicalCategory" });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+
 
 router.put("/updateItemInGroup/:groupId", async (request, response) => {
     try {

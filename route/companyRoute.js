@@ -182,6 +182,35 @@ router.get("/getAllCompanies/:id", async (req, res) => {
 });
 
 
+router.get("/getCompany_info/:companyId", async (req, res) => {
+    try {
+        const { companyId } = req.params;
+        const categories = await Category.find();
+        let foundCompany = null;
+
+        categories.forEach(category => {
+            category.specialties.forEach(specialtie => {
+                specialtie.company.forEach(company => {
+                    if (companyId == company._id) {
+                        foundCompany = company;
+                        return; // Break out of the loop if company is found
+                    }
+                });
+            });
+        });
+
+        if (foundCompany) {
+            res.status(200).json(foundCompany);
+        } else {
+            res.status(404).json({ message: "Can't find company" });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+
+
 // router.post("/addCompaniesNew", async (req, res) => {
 //     try {
 //         const { id , name } = req.body;
