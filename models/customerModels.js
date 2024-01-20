@@ -42,6 +42,8 @@ const customerSchema = new mongoose.Schema({
         required: [false, "please enter address !"]
     },
 
+    //get cv in customer  
+
 });
 const Customer = mongoose.model('Customer', customerSchema);
 module.exports = Customer;

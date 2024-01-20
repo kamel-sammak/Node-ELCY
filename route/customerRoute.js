@@ -21,7 +21,7 @@ router.get("/getAllCustomer", async (request, response) => {
 router.get("/getCustomer_info/:id", async (request, response) => {
     try {
         const { id } = request.params;
-        const customer = await Customer.findById(id).select('firstName lastName email phoneNumber gender');
+        const customer = await Customer.findById(id).select('firstName lastName email phoneNumber gender address');
         if (!customer) {
             return response.status(404).json({ message: "customer not found" });
         }

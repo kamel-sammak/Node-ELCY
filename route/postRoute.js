@@ -70,7 +70,19 @@ router.get('/getAllPost/:companyId', async (request, response) => {
     }
 });
 
-
+router.get("/getPost_info/:id", async (request, response) => {
+    try {
+        const { id } = request.params;
+        const post = await Post.findById(id).select('title content');
+        if (!post) {
+            return response.status(404).json({ message: "post not found" });
+        }
+        response.status(200).json(post);
+    } catch (error) {
+        console.log(error.message);
+        response.status(500).json({ message: error.message });
+    }
+});
 
 router.put("/editPost/:id", async (request, response) => {
     try {

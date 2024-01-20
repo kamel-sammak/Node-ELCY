@@ -3,11 +3,12 @@ const router = express.Router();
 
 const Company = require("../models/companyModels");
 const Category = require("../models/categoryModels");
+const Post = require("../models/postModels");
 
 
 router.post("/addCompaniesAndSignup/:SpecialtiesId", async (req, res) => {
     try {
-        const { name, imageUrl, email, password } = req.body;
+        const { name, imageUrl, email, password, years, rating, employees } = req.body;
         const { SpecialtiesId } = req.params;
 
         // Find the category with the specified specialty
@@ -56,7 +57,7 @@ router.post("/addCompaniesAndSignup/:SpecialtiesId", async (req, res) => {
         }
 
         // Create a new company with imageUrl, email, and password
-        const newCompany = new Company({ name, imageUrl, email, password });
+        const newCompany = new Company({ name, imageUrl, email, password, years, rating, employees });
 
         // Add the new company to the specialty
         specialty.company.push(newCompany);
@@ -115,30 +116,64 @@ router.post("/addCompaniesAndSignup/:SpecialtiesId", async (req, res) => {
 
 
 
+// router.get("/getAllCompanies/:id", async (req, res) => {
+//     try {
+//         const { id } = req.params;
+//         const categories = await Category.find();
+//         var findCat = false;
+//         var allCompanies = []
+//         categories.forEach(category => {
+//             findCat = true
+
+//             category.specialties.forEach(specialtie => {
+//                 if (id == specialtie._id)
+//                     allCompanies = specialtie.company
+//             });
+//         });
+//         if (findCat) res.status(200).json(allCompanies);
+//         else res.status(404).json({ message: "can't find category" });
+//     } catch (error) {
+//         res.status(500).json({ message: error.message });
+//     }
+// });
+
+
+
+
 router.get("/getAllCompanies/:id", async (req, res) => {
     try {
         const { id } = req.params;
         const categories = await Category.find();
-        var findCat = false;
-        var allCompanies = []
-        categories.forEach(category => {
-            findCat = true
+        let findCat = false;
+        let allCompanies = [];
 
+        categories.forEach(category => {
             category.specialties.forEach(specialtie => {
-                if (id == specialtie._id)
-                    allCompanies = specialtie.company
+                if (id == specialtie._id) {
+                    findCat = true;
+                    allCompanies = specialtie.company;
+                }
             });
         });
-        if (findCat) res.status(200).json(allCompanies);
-        else res.status(404).json({ message: "can't find category" });
+
+        if (findCat) {
+            // Fetch posts for each company
+            for (let i = 0; i < allCompanies.length; i++) {
+                const companyId = allCompanies[i]._id;
+                const posts = await Post.find({ company: companyId });
+                allCompanies[i].NumberPost = posts.length;
+            }
+
+            // Sort companies based on the "years" field in descending order
+            allCompanies.sort((a, b) => b.years - a.years);
+            res.status(200).json(allCompanies);
+        } else {
+            res.status(404).json({ message: "Can't find category" });
+        }
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 });
-
-
-
-
 
 
 

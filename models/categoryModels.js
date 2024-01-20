@@ -13,7 +13,19 @@ const categorySchema = new mongoose.Schema({
             name: { type: String },
             imageUrl: { type: String },
             email: { type: String },
-            password: { type: String }
+            password: { type: String },
+            years: { type: Number },
+            employees: { type: Number },
+            NumberPost: { type: Number },
+            rating: [{
+
+                1: { type: Boolean, required: true },
+                2: { type: Boolean, required: true },
+                3: { type: Boolean, required: true },
+                4: { type: Boolean, required: true },
+                5: { type: Boolean, required: true },
+            }],
+
         }]
     }]
 });

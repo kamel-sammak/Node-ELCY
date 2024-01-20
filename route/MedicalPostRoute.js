@@ -63,6 +63,20 @@ router.get('/getAllMedicalPost/:groupId', async (request, response) => {
     }
 });
 
+router.get("/getMedicalPost_info/:id", async (request, response) => {
+    try {
+        const { id } = request.params;
+        const medicalPost = await MedicalPost.findById(id).select('title content');
+        if (!medicalPost) {
+            return response.status(404).json({ message: "medicalPost not found" });
+        }
+        response.status(200).json(medicalPost);
+    } catch (error) {
+        console.log(error.message);
+        response.status(500).json({ message: error.message });
+    }
+});
+
 router.put("/editMedicalPost/:id", async (request, response) => {
     try {
         const { id } = request.params;

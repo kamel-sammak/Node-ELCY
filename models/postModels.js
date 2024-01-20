@@ -1,23 +1,11 @@
 const mongoose = require('mongoose');
 const postSchema = new mongoose.Schema({
 
-
-  content: {
-    type: String,
-    //     required: [true, "Please enter the post"],
-  },
-
+  content: { type: String, },
   title: { type: String },
+  company: { type: mongoose.Schema.Types.ObjectId, },
 
-
-  company: {
-    type: mongoose.Schema.Types.ObjectId,
-
-  },
-
-  //isLike: { type: Boolean }
-
-
+  //post cv
 
 });
 const Post = mongoose.model('post', postSchema);
