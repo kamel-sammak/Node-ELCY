@@ -56,8 +56,14 @@ router.post("/addCompaniesAndSignup/:SpecialtiesId", async (req, res) => {
             return res.status(400).json({ message: "Password must contain both letters and numbers." });
         }
 
+        // Ensure the entered rating is between 1 and 10
+        const validatedRating = parseInt(rating);
+        if (isNaN(validatedRating) || validatedRating < 1 || validatedRating > 5) {
+            return res.status(400).json({ message: "Invalid rating. Please provide a rating between 1 and 5." });
+        }
+
         // Create a new company with imageUrl, email, and password
-        const newCompany = new Company({ name, imageUrl, email, password, years, rating, employees });
+        const newCompany = new Company({ name, imageUrl, email, password, years, rating: validatedRating, employees });
 
         // Add the new company to the specialty
         specialty.company.push(newCompany);
@@ -164,8 +170,8 @@ router.get("/getAllCompanies/:id", async (req, res) => {
                 allCompanies[i].NumberPost = posts.length;
             }
 
-            // Sort companies based on the "years" field in descending order
-            allCompanies.sort((a, b) => b.years - a.years);
+            // Sort companies based on the "rating" field in descending order
+            allCompanies.sort((a, b) => b.rating - a.rating);
             res.status(200).json(allCompanies);
         } else {
             res.status(404).json({ message: "Can't find category" });
@@ -174,8 +180,6 @@ router.get("/getAllCompanies/:id", async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 });
-
-
 
 
 // router.post("/addCompaniesNew", async (req, res) => {
