@@ -167,9 +167,10 @@ router.post("/addCategory1", async (request, response) => {
 // });
 
 
-router.post("/addCategoryOnly", async (request, response) => {
+router.post("/addCategory/:serviceId", async (request, response) => {
     try {
-        const { name, serviceId, imageUrl } = request.body;
+        const { name, imageUrl } = request.body;
+        const { serviceId } = request.params;
 
         // Check if a category with the same name already exists
         const existingCategory = await Category.findOne({ name });
