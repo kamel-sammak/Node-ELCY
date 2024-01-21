@@ -1,11 +1,15 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
+const bcrypt = require('bcrypt');
 
 const Customer = require("../models/customerModels.js");
+const Category = require("../models/categoryModels");
+const MedicalCategory = require("../models/MedicalCategoryModels");
 
 
-router.post("/login", async (request, response) => {
+
+router.post("/loginFlutter", async (request, response) => {
     try {
         const { email, password } = request.body;
 
@@ -56,6 +60,113 @@ function generateAccessToken(customer) {
 function generateRefreshToken(customer) {
     return jwt.sign({ id: customer._id, role: "customer" }, 'your-refresh-secret-key', { expiresIn: '30d' });
 }
+
+
+
+// router.post("/loginCompany", async (req, res) => {
+//     try {
+//         const { email, password } = req.body;
+
+//         const categories = await Category.find();
+//         let authenticatedCompany = null;
+
+//         categories.forEach(category => {
+//             category.specialties.forEach(specialty => {
+//                 const company = specialty.company.find(company => company.email === email);
+
+//                 if (company && company.password === password) {
+//                     authenticatedCompany = company;
+//                 }
+//             });
+//         });
+
+//         if (authenticatedCompany) {
+//             // Generate a JWT token for authentication
+//             const token = jwt.sign({ companyId: authenticatedCompany._id }, 'your-secret-key', { expiresIn: '1h' });
+//             res.status(200).json({ token, companyId: authenticatedCompany._id });
+//         } else {
+//             res.status(401).json({ message: "Invalid email or password" });
+//         }
+//     } catch (error) {
+//         console.error(error.message);
+//         res.status(500).json({ message: error.message });
+//     }
+// });
+
+// router.post("/loginGroup", async (req, res) => {
+//     try {
+//         const { email, password } = req.body;
+
+//         const medicalCategories = await MedicalCategory.find();
+//         let authenticatedGroup = null;
+
+//         medicalCategories.forEach(medicalCategory => {
+//             const group = medicalCategory.group.find(group => group.email === email);
+
+//             if (group && group.password === password) {
+//                 authenticatedGroup = group;
+//             }
+//         });
+
+//         if (authenticatedGroup) {
+//             // Generate a JWT token for authentication
+//             const token = jwt.sign({ groupId: authenticatedGroup._id }, 'your-secret-key', { expiresIn: '1h' });
+//             res.status(200).json({ token, groupId: authenticatedGroup._id });
+//         } else {
+//             res.status(401).json({ message: "Invalid email or password" });
+//         }
+//     } catch (error) {
+//         console.error(error.message);
+//         res.status(500).json({ message: error.message });
+//     }
+// });
+
+
+router.post("/loginVueJS", async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        // Fetch both categories and medical categories from the database
+        const categories = await Category.find();
+        const medicalCategories = await MedicalCategory.find();
+
+        let authenticatedUser = null;
+        let userType = null;
+
+        // Check if the email and password match a company
+        categories.forEach(category => {
+            category.specialties.forEach(specialty => {
+                const company = specialty.company.find(company => company.email === email);
+                if (company && company.password === password) {
+                    authenticatedUser = company;
+                    userType = 'company';
+                }
+            });
+        });
+
+        // If not a company, check if the email and password match a group
+        if (!authenticatedUser) {
+            medicalCategories.forEach(medicalCategory => {
+                const group = medicalCategory.group.find(group => group.email === email);
+                if (group && group.password === password) {
+                    authenticatedUser = group;
+                    userType = 'group';
+                }
+            });
+        }
+
+        if (authenticatedUser) {
+            // Generate a JWT token for authentication
+            const token = jwt.sign({ userId: authenticatedUser._id, userType }, 'your-secret-key', { expiresIn: '1h' });
+            res.status(200).json({ message: `Successfully logged in as ${userType}`, token, userId: authenticatedUser._id });
+        } else {
+            res.status(401).json({ message: "Invalid email or password" });
+        }
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ message: error.message });
+    }
+});
 
 
 
