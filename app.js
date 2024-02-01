@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
 const app = express();
 const port = 3000;
 const databaseUrl = "mongodb://127.0.0.1:27017/ELCY";
@@ -14,6 +15,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 //use middleware
 app.use(express.json()); // this to active send data with json type
 app.use(express.urlencoded({ extended: false })); // this to active send data with form type
+app.use(cors());
 
 
 //connect to mongoDB and start listen on port
@@ -47,6 +49,7 @@ const GroupRoute = require("./route/GroupRoute");
 const DrugRoute = require("./route/DrugsRoute");
 const MedicalPost = require("./route/MedicalPostRoute");
 const customer = require("./route/customerRoute");
+const cv = require("./route/cvRoute");
 
 app.use("/api", loginRoute);
 app.use("/api", signupRoute);
@@ -63,5 +66,6 @@ app.use("/api", GroupRoute);
 app.use("/api", DrugRoute);
 app.use("/api", MedicalPost);
 app.use("/api", customer);
+app.use("/api", cv);
 
 

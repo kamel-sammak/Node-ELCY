@@ -6,9 +6,10 @@ const MedicalCategory = require("../models/MedicalCategoryModels");
 
 
 
-router.post("/addMedicalCategory", async (request, response) => {
+router.post("/addMedicalCategory/:serviceId", async (request, response) => {
     try {
-        const { name, serviceId } = request.body;
+        const { name, imageUrl } = request.body;
+        const { serviceId } = request.params;
 
         // Check if a MedicalCategory with the same name already exists
         const existingMedicalCategory = await MedicalCategory.findOne({ name });
@@ -25,9 +26,9 @@ router.post("/addMedicalCategory", async (request, response) => {
         }
 
         // If no existing MedicalCategory and service, create a new category
-        const medicalCategory = await MedicalCategory.create(request.body);
+        const medicalCategory = await MedicalCategory.create({ name, serviceId, imageUrl });
 
-        response.status(200).json(medicalCategory);
+        response.status(200).json({ name, serviceId, imageUrl });
     } catch (error) {
         response.status(500).json({ message: error.message });
     }

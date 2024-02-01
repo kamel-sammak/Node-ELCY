@@ -42,6 +42,10 @@ const customerSchema = new mongoose.Schema({
         required: [false, "please enter address !"]
     },
 
+    cvContent: {
+        type: String,
+        required: [false, "please enter CV content !"]
+    },
     //get cv in customer  
 
 });

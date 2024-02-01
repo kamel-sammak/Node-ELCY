@@ -103,7 +103,7 @@ router.get("/getAllGroup/:id", async (req, res) => {
         if (medicalCategory) {
             const { _id, group } = medicalCategory;
             // Remove the 'company' field from each specialty
-            const modifiedGroups = group.map(({ email, password, imageUrl, name, _id }) => ({ name, _id, imageUrl, email, password }));
+            const modifiedGroups = group.map(({ imageUrl, name, _id }) => ({ name, _id, imageUrl }));
 
             res.status(200).json({ _id, group: modifiedGroups });
         } else {
@@ -123,8 +123,8 @@ router.get("/getGroup_info/:groupId", async (req, res) => {
             const group = medicalCategory.group.find(group => group._id == groupId);
 
             if (group) {
-                const { _id, email, password, imageUrl, name } = group;
-                const modifiedGroup = { _id, email, password, imageUrl, name };
+                const { _id, imageUrl, name } = group;
+                const modifiedGroup = { _id, imageUrl, name };
 
                 res.status(200).json(modifiedGroup);
             } else {

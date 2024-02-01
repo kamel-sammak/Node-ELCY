@@ -170,9 +170,21 @@ router.get("/getAllCompanies/:id", async (req, res) => {
                 allCompanies[i].NumberPost = posts.length;
             }
 
+            // Extract only name and imageUrl from each company
+            const simplifiedCompanies = allCompanies.map(company => ({
+                id: company.id,
+                name: company.name,
+                imageUrl: company.imageUrl,
+                years: company.years,
+                employees: company.employees,
+                rating: company.rating,
+                NumberPost: company.NumberPost
+            }));
+
             // Sort companies based on the "rating" field in descending order
-            allCompanies.sort((a, b) => b.rating - a.rating);
-            res.status(200).json(allCompanies);
+            simplifiedCompanies.sort((a, b) => b.rating - a.rating);
+
+            res.status(200).json(simplifiedCompanies);
         } else {
             res.status(404).json({ message: "Can't find category" });
         }
@@ -180,6 +192,7 @@ router.get("/getAllCompanies/:id", async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 });
+
 
 
 router.get("/getCompany_info/:companyId", async (req, res) => {
@@ -192,7 +205,14 @@ router.get("/getCompany_info/:companyId", async (req, res) => {
             category.specialties.forEach(specialtie => {
                 specialtie.company.forEach(company => {
                     if (companyId == company._id) {
-                        foundCompany = company;
+                        foundCompany = {
+                            id: company.id,
+                            name: company.name,
+                            imageUrl: company.imageUrl,
+                            years: company.years,
+                            employees: company.employees,
+                            rating: company.rating
+                        };
                         return; // Break out of the loop if company is found
                     }
                 });
@@ -208,6 +228,7 @@ router.get("/getCompany_info/:companyId", async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 });
+
 
 
 

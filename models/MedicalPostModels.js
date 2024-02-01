@@ -1,8 +1,14 @@
 const mongoose = require('mongoose');
 const MedicalPostSchema = new mongoose.Schema({
 
-    content: { type: String },
-    title: { type: String },
+    content: {
+        type: String,
+        required: [true, "please enter content !"]
+    },
+    title: {
+        type: String,
+        required: [true, "please enter title !"]
+    },
     group: { type: mongoose.Schema.Types.ObjectId },
 
 });

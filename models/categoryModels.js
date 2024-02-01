@@ -1,23 +1,58 @@
 const mongoose = require('mongoose');
 const categorySchema = new mongoose.Schema({
-    id: { type: String },
-    serviceId: { type: String },
-    name: { type: String },
-    imageUrl: { type: String },
+    name: {
+        type: String,
+        required: [true, "please enter name !"]
+    },
+    serviceId: {
+        type: String,
+        required: [true, "please enter serviceId !"]
+    },
+    imageUrl: {
+        type: String,
+        required: [true, "please enter imageUrl !"]
+    },
     specialties: [{
-        id: { type: Number },
-        name: { type: String },
-        imageUrl: { type: String },
+        name: {
+            type: String,
+            required: [true, "please enter name !"]
+        },
+        imageUrl: {
+            type: String,
+            required: [true, "please enter imageUrl !"]
+        },
         company: [{
-            id: { type: Number },
-            name: { type: String },
-            imageUrl: { type: String },
-            email: { type: String },
-            password: { type: String },
-            years: { type: Number },
-            employees: { type: Number },
-            NumberPost: { type: Number },
-            rating: { type: Number },
+            name: {
+                type: String,
+                required: [true, "please enter name !"]
+            },
+            imageUrl: {
+                type: String,
+                required: [true, "please enter imageUrl !"]
+            },
+            email: {
+                type: String,
+                required: [true, "please enter email !"]
+            },
+            password: {
+                type: String,
+                required: [true, "please enter password !"]
+            },
+            years: {
+                type: Number,
+                required: [true, "please enter years !"]
+            },
+            employees: {
+                type: Number,
+                required: [true, "please enter employees !"]
+            },
+            NumberPost: {
+                type: Number,
+            },
+            rating: {
+                type: Number,
+                required: [true, "please enter rating !"]
+            },
         }]
     }]
 });

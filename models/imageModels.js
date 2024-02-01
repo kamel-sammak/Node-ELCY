@@ -3,11 +3,11 @@ const imageSchema = new mongoose.Schema({
 
     name: {
         type: String,
-        required: true
+        required: [true, "please enter name !"]
     },
     image: {
         data: Buffer,
-        contentType: String
+        contentType: String,
     }
 
 });

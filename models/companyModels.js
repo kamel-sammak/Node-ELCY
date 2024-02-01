@@ -1,15 +1,40 @@
 const mongoose = require('mongoose');
 const companySchema = new mongoose.Schema({
-    id: { type: String },
-    specialtiesId: { type: String },
-    name: { type: String },
-    imageUrl: { type: String },
-    password: { type: String },
-    email: { type: String },
-    years: { type: Number },
-    employees: { type: Number },
-    NumberPost: { type: Number },
-    rating: { type: Number },
+    name: {
+        type: String,
+        required: [true, "please enter name !"]
+    },
+    specialtiesId: {
+        type: String,
+        required: [true, "please enter specialtiesId !"]
+    },
+    imageUrl: {
+        type: String,
+        required: [true, "please enter imageUrl !"]
+    },
+    password: {
+        type: String,
+        required: [true, "please enter password !"]
+    },
+    email: {
+        type: String,
+        required: [true, "please enter email !"]
+    },
+    years: {
+        type: Number,
+        required: [true, "please enter years !"]
+    },
+    employees: {
+        type: Number,
+        required: [true, "please enter employees !"]
+    },
+    NumberPost: {
+        type: Number,
+    },
+    rating: {
+        type: Number,
+        required: [true, "please enter rating !"]
+    },
 });
 
 

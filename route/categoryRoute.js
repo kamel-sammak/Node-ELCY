@@ -187,9 +187,9 @@ router.post("/addCategory/:serviceId", async (request, response) => {
         }
 
         // If no existing category and service, create a new category with only name and serviceId
-        const category = await Category.create({ name, serviceId, imageUrl });
+        await Category.create({ name, serviceId, imageUrl });
 
-        response.status(200).json({ name, serviceId });
+        response.status(200).json({ name, serviceId, imageUrl });
     } catch (error) {
         response.status(500).json({ message: error.message });
     }
