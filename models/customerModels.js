@@ -9,14 +9,6 @@ const customerSchema = new mongoose.Schema({
         type: String,
         required: [false, "please enter user lastName !"]
     },
-    // motherName: {
-    //     type: String,
-    //     required: [false, "please enter user motherName  !"]
-    // },
-    // fatherName: {
-    //     type: String,
-    //     required: [false, "please enter user fatherName !"]
-    // },
     gender: {
         type: String,
         required: [false, "please enter gender !"]
@@ -41,12 +33,6 @@ const customerSchema = new mongoose.Schema({
         type: String,
         required: [false, "please enter address !"]
     },
-
-    cvContent: {
-        type: String,
-        required: [false, "please enter CV content !"]
-    },
-    //get cv in customer  
 
 });
 const Customer = mongoose.model('Customer', customerSchema);
