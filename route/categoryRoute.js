@@ -3,164 +3,78 @@ const router = express.Router();
 
 const Category = require("../models/categoryModels");
 const Service = require("../models/serviceModels");
-
-const multer = require('multer');
 const Image = require('../models/imageModels');
 
 
-// Storage configuration for multer
-const Storage = multer.diskStorage({
-    destination: "uploads",
-    filename: (req, file, cb) => {
-        cb(null, file.originalname);
-    },
-});
+// const path = require('path');
+// const multer = require('multer');
 
-const upload = multer({
-    storage: Storage
-}).single('image');
-
-
-router.post("/addCategory2", async (request, response) => {
-    try {
-        upload(request, response, async (err) => {
-            if (err) {
-                console.log(err);
-                return response.status(500).json({ status: 500, message: 'Error uploading image', error: err.message });
-            }
-            try {
-                const { name, serviceId, specialties } = request.body;
-
-                // Check if a category with the same name already exists
-                const existingCategory = await Category.findOne({ name });
-
-                if (existingCategory) {
-                    return response.status(400).json({ message: "Category with the same name already exists" });
-                }
-
-                // Check if the specified serviceId exists in the Service collection
-                const existingService = await Service.findById(serviceId);
-
-                if (!existingService) {
-                    return response.status(400).json({ message: "Service with the specified ID not found" });
-                }
-
-                const newImage = new Image({
-                    name: request.body.name,
-                    image: {
-                        data: request.file.filename,
-                        contentType: request.file.mimetype,
-                    },
-                });
-
-                // Save the image document
-                await newImage.save();
-
-                // If no existing category and service, create a new category
-                const category = await Category.create({
-                    name,
-                    serviceId,
-                    imageUrl: '/uploads/' + newImage.name + '.' + newImage.image.contentType.split('/')[1],
-                    image: newImage,
-                    specialties,
-
-                });
-
-                response.status(200).json(category);
-
-            } catch (saveError) {
-                console.error(saveError);
-                response.status(500).json({ status: 500, message: 'Error saving image data', error: saveError.message });
-            }
-        });
-    } catch (error) {
-        response.status(500).json({ message: error.message });
-    }
-});
+// const Storage = multer.diskStorage({
+//     destination: "uploads",
+//     filename: (req, file, cb) => {
+//       // Modify the filename to be the entered name with the image suffix
+//       const modifiedFileName = req.body.name + path.extname(file.originalname);
+//       cb(null, modifiedFileName);
+//     },
+//   });
+  
+//   const upload = multer({
+//     storage: Storage
+//   }).single('image');
 
 
-
-router.post("/addCategory1", async (request, response) => {
-    try {
-        upload(request, response, async (err) => {
-            if (err) {
-                console.log(err);
-                return response.status(500).json({ message: 'Error uploading image', error: err.message });
-            }
-
-            try {
-                const { name, serviceId, specialties } = request.body;
-
-                // Check if a category with the same name already exists
-                const existingCategory = await Category.findOne({ name });
-
-                if (existingCategory) {
-                    return response.status(400).json({ message: "Category with the same name already exists" });
-                }
-
-                // Check if the specified serviceId exists in the Service collection
-                const existingService = await Service.findById(serviceId);
-
-                if (!existingService) {
-                    return response.status(400).json({ message: "Service with the specified ID not found" });
-                }
-
-                // If no existing category and service, create a new category
-                const newImage = new Image({
-                    name: name,
-                    image: {
-                        data: request.file.filename,
-                        contentType: request.file.mimetype,
-                    },
-                });
-
-                await newImage.save();
-
-                const category = await Category.create({
-                    name,
-                    serviceId,
-                    imageUrl: '/uploads/' + newImage.name + '.' + newImage.image.contentType.split('/')[1],
-                    image: newImage,
-                    specialties
-                });
-
-                response.status(200).json(category);
-
-            } catch (saveError) {
-                console.error(saveError);
-                response.status(500).json({ message: 'Error saving image data', error: saveError.message });
-            }
-        });
-
-    } catch (error) {
-        response.status(500).json({ message: error.message });
-    }
-});
-
-
-
-// router.post("/addCategory", async (request, response) => {
+// router.post("/addCategory1", async (request, response) => {
 //     try {
-//         const { name, serviceId } = request.body;
+//         upload(request, response, async (err) => {
+//             if (err) {
+//                 console.log(err);
+//                 return response.status(500).json({ message: 'Error uploading image', error: err.message });
+//             }
 
-//         // Check if a category with the same name already exists
-//         const existingCategory = await Category.findOne({ name });
+//             try {
+//                 const { name, serviceId, specialties } = request.body;
 
-//         if (existingCategory) {
-//             return response.status(400).json({ message: "Category with the same name already exists" });
-//         }
+//                 // Check if a category with the same name already exists
+//                 const existingCategory = await Category.findOne({ name });
 
-//         // Check if the specified serviceId exists in the Service collection
-//         const existingService = await Service.findById(serviceId);
+//                 if (existingCategory) {
+//                     return response.status(400).json({ message: "Category with the same name already exists" });
+//                 }
 
-//         if (!existingService) {
-//             return response.status(400).json({ message: "Service with the specified ID not found" });
-//         }
+//                 // Check if the specified serviceId exists in the Service collection
+//                 const existingService = await Service.findById(serviceId);
 
-//         // If no existing category and service, create a new category
-//         const category = await Category.create(request.body);
+//                 if (!existingService) {
+//                     return response.status(400).json({ message: "Service with the specified ID not found" });
+//                 }
 
-//         response.status(200).json(category);
+//                 // If no existing category and service, create a new category
+//                 const newImage = new Image({
+//                     name: name,
+//                     image: {
+//                         data: request.file.filename,
+//                         contentType: request.file.mimetype,
+//                     },
+//                 });
+
+//                 await newImage.save();
+
+//                 const category = await Category.create({
+//                     name,
+//                     serviceId,
+//                     imageUrl: '/uploads/' + newImage.name + '.' + newImage.image.contentType.split('/')[1],
+//                     image: newImage,
+//                     specialties
+//                 });
+
+//                 response.status(200).json(category);
+
+//             } catch (saveError) {
+//                 console.error(saveError);
+//                 response.status(500).json({ message: 'Error saving image data', error: saveError.message });
+//             }
+//         });
+
 //     } catch (error) {
 //         response.status(500).json({ message: error.message });
 //     }

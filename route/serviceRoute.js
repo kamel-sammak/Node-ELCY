@@ -75,14 +75,12 @@ router.post("/addService", async (request, response) => {
     try {
         const { name, imageUrl } = request.body;
 
-        // Check if a service  with the same name already exists
         const existingService = await Service.findOne({ name });
 
         if (existingService) {
             return response.status(400).json({ message: "Service with the same name already exists" });
         }
 
-        // If no existing service , create a new one
         const service = await Service.create(request.body);
 
         response.status(200).json(service);
@@ -149,7 +147,6 @@ router.delete("/deleteService1/:name", async (request, response) => {
             return response.status(404).json({ message: "Service not found" });
         }
 
-        // Delete associated image
         await Image.findOneAndDelete({ name });
 
         response.status(200).json({ message: `Deleted service: ${service.name}` });

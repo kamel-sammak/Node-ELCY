@@ -37,9 +37,9 @@ router.get('/matchPostsToCVs', async (req, res, next) => {
                         if (jaccardSimilarity > 0) {
                             // Customize the information you want to include in the result
                             const matchResult = {
-                                customerId: cv.customer, // Include customer ID or other relevant information
-                                postId: post._id, // Include post ID or other relevant information
-                                postTitle: post.title, // Include post title or other relevant information
+                                customerId: cv.customer, 
+                                postId: post._id, 
+                                postTitle: post.title, 
                                 similarity: jaccardSimilarity,
                                 Skills: post.Skills
                             };
@@ -101,8 +101,8 @@ router.get('/matchPostsToCV/:customerId', async (req, res, next) => {
                 if (jaccardSimilarity > 0) {
                     // Customize the information you want to include in the result
                     const matchResult = {
-                        postId: post._id, // Include post ID or other relevant information
-                        postTitle: post.title, // Include post title or other relevant information
+                        postId: post._id, 
+                        postTitle: post.title, 
                         similarity: jaccardSimilarity,
                         Skills: post.Skills
                     };
