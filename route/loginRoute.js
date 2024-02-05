@@ -1,12 +1,11 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
-const bcrypt = require('bcrypt');
 
 const Customer = require("../models/customerModels.js");
 const Category = require("../models/categoryModels");
 const MedicalCategory = require("../models/MedicalCategoryModels");
-
+const Admin = require("../models/adminModels");
 
 
 router.post("/loginFlutter", async (request, response) => {
@@ -126,25 +125,35 @@ router.post("/loginVueJS", async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        // Fetch both categories and medical categories from the database
+        // Fetch both categories, medical categories, and admin from the database
         const categories = await Category.find();
         const medicalCategories = await MedicalCategory.find();
+        const admins = await Admin.find();
 
         let authenticatedUser = null;
         let userType = null;
 
-        // Check if the email and password match a company
-        categories.forEach(category => {
-            category.specialties.forEach(specialty => {
-                const company = specialty.company.find(company => company.email === email);
-                if (company && company.password === password) {
-                    authenticatedUser = company;
-                    userType = 'company';
-                }
-            });
-        });
+        // Check if the email and password match an admin
+        const adminUser = admins.find(admin => admin.email === email && admin.password === password);
+        if (adminUser) {
+            authenticatedUser = adminUser;
+            userType = 'admin';
+        }
 
-        // If not a company, check if the email and password match a group
+        // If not an admin, check if the email and password match a company
+        if (!authenticatedUser) {
+            categories.forEach(category => {
+                category.specialties.forEach(specialty => {
+                    const company = specialty.company.find(company => company.email === email);
+                    if (company && company.password === password) {
+                        authenticatedUser = company;
+                        userType = 'company';
+                    }
+                });
+            });
+        }
+
+        // If not a company or admin, check if the email and password match a group
         if (!authenticatedUser) {
             medicalCategories.forEach(medicalCategory => {
                 const group = medicalCategory.group.find(group => group.email === email);
@@ -167,6 +176,7 @@ router.post("/loginVueJS", async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 });
+
 
 
 

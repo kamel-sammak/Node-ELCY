@@ -49,6 +49,8 @@ const DrugRoute = require("./route/DrugsRoute");
 const MedicalPost = require("./route/MedicalPostRoute");
 const customer = require("./route/customerRoute");
 const cv = require("./route/cvRoute");
+const admin = require("./route/adminRoute");
+const problemSolving = require("./route/problemSolvingRoute");
 
 app.use("/api", loginRoute);
 app.use("/api", signupRoute);
@@ -64,5 +66,5 @@ app.use("/api", DrugRoute);
 app.use("/api", MedicalPost);
 app.use("/api", customer);
 app.use("/api", cv);
-
-
+app.use("/api", admin);
+app.use("/api", problemSolving);
