@@ -137,7 +137,7 @@ router.post("/loginVueJS", async (req, res) => {
         const adminUser = admins.find(admin => admin.email === email && admin.password === password);
         if (adminUser) {
             authenticatedUser = adminUser;
-            userType = 'admin';
+            userType = 1; // admin
         }
 
         // If not an admin, check if the email and password match a company
@@ -147,7 +147,7 @@ router.post("/loginVueJS", async (req, res) => {
                     const company = specialty.company.find(company => company.email === email);
                     if (company && company.password === password) {
                         authenticatedUser = company;
-                        userType = 'company';
+                        userType = 2; // company
                     }
                 });
             });
@@ -159,7 +159,7 @@ router.post("/loginVueJS", async (req, res) => {
                 const group = medicalCategory.group.find(group => group.email === email);
                 if (group && group.password === password) {
                     authenticatedUser = group;
-                    userType = 'group';
+                    userType = 3; // group
                 }
             });
         }
@@ -167,7 +167,7 @@ router.post("/loginVueJS", async (req, res) => {
         if (authenticatedUser) {
             // Generate a JWT token for authentication
             const token = jwt.sign({ userId: authenticatedUser._id, userType }, 'your-secret-key', { expiresIn: '1h' });
-            res.status(200).json({ message: `Successfully logged in as ${userType}`, token, userId: authenticatedUser._id });
+            res.status(200).json({ message: `Successfully logged in as ${userType === 1 ? 'admin' : userType === 2 ? 'company' : 'group'}`, token, userId: authenticatedUser._id, userType });
         } else {
             res.status(401).json({ message: "Invalid email or password" });
         }
@@ -176,6 +176,7 @@ router.post("/loginVueJS", async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 });
+
 
 
 
