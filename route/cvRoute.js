@@ -37,9 +37,9 @@ router.get('/matchPostsToCVs', async (req, res, next) => {
                         if (jaccardSimilarity > 0) {
                             // Customize the information you want to include in the result
                             const matchResult = {
-                                customerId: cv.customer, 
-                                postId: post._id, 
-                                postTitle: post.title, 
+                                customerId: cv.customer,
+                                postId: post._id,
+                                postTitle: post.title,
                                 similarity: jaccardSimilarity,
                                 Skills: post.Skills
                             };
@@ -101,10 +101,12 @@ router.get('/matchPostsToCV/:customerId', async (req, res, next) => {
                 if (jaccardSimilarity > 0) {
                     // Customize the information you want to include in the result
                     const matchResult = {
-                        postId: post._id, 
-                        postTitle: post.title, 
-                        similarity: jaccardSimilarity,
-                        Skills: post.Skills
+                        postId: post._id,
+                        companyId: post.company,
+                        postTitle: post.title,
+                        content: post.content
+                        //similarity: jaccardSimilarity,
+                        //Skills: post.Skills
                     };
 
                     matchedResults.push(matchResult);
@@ -115,10 +117,7 @@ router.get('/matchPostsToCV/:customerId', async (req, res, next) => {
         // Sort matched results by similarity in descending order
         matchedResults.sort((a, b) => b.similarity - a.similarity);
 
-        res.status(200).json({
-            success: true,
-            data: matchedResults,
-        });
+        res.status(200).json(matchedResults);
     } catch (error) {
         next(error);
     }

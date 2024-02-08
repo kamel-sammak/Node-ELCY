@@ -8,7 +8,7 @@ const Category = require("../models/categoryModels");
 router.post("/addPost/:companyId", async (req, res) => {
     try {
         const { companyId } = req.params;
-        const { title, content, postContent, engineeringDivision, Skills } = req.body;
+        const { title, content, engineeringDivision, Skills } = req.body;
 
         // Validate engineeringDivision and Skills
         const validOptions = {
@@ -71,7 +71,7 @@ router.post("/addPost/:companyId", async (req, res) => {
 
         // Create a new post instance and associate it with the company
         const newPost = new Post({
-            title, content, postContent,
+            title, content,
             Engineering: engineeringDivision,
             Skills: Skills,
         });
@@ -98,7 +98,7 @@ router.post("/addPost/:companyId", async (req, res) => {
 // router.post("/addPostOld/:companyId", async (req, res) => {
 //     try {
 //         const { companyId } = req.params;
-//         const { title, content, postContent } = req.body;
+//         const { title, content } = req.body;
 
 //         const category = await Category.findOne({ "specialties.company._id": companyId });
 
@@ -122,7 +122,7 @@ router.post("/addPost/:companyId", async (req, res) => {
 //         foundCompany.posts = foundCompany.posts || [];
 
 //         // Create a new post instance and associate it with the company
-//         const newPost = new Post({ title, content, postContent });
+//         const newPost = new Post({ title, content});
 
 //         // Add the companyId to the newPost
 //         newPost.company = companyId;
