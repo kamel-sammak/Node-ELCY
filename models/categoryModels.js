@@ -40,18 +40,18 @@ const categorySchema = new mongoose.Schema({
             },
             years: {
                 type: Number,
-                required: [true, "please enter years !"]
+                required: [false, "please enter years !"]
             },
             employees: {
                 type: Number,
-                required: [true, "please enter employees !"]
+                required: [false, "please enter employees !"]
             },
             NumberPost: {
                 type: Number,
             },
             rating: {
                 type: Number,
-                required: [true, "please enter rating !"]
+                required: [false, "please enter rating !"]
             },
         }]
     }]

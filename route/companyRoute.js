@@ -8,7 +8,7 @@ const Post = require("../models/postModels");
 
 router.post("/addCompaniesAndSignup/:SpecialtiesId", async (req, res) => {
     try {
-        const { name, imageUrl, email, password, years, rating, employees } = req.body;
+        const { name, imageUrl, email, password, years, employees } = req.body;
         const { SpecialtiesId } = req.params;
 
         // Find the category with the specified specialty
@@ -50,20 +50,23 @@ router.post("/addCompaniesAndSignup/:SpecialtiesId", async (req, res) => {
             return res.status(400).json({ message: "Password must be at least 8 characters long." });
         }
 
-        // Validate password format (should contain both letters and numbers)
-        const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d).+$/;
-        if (!passwordRegex.test(password)) {
-            return res.status(400).json({ message: "Password must contain both letters and numbers." });
-        }
-
-        // Ensure the entered rating is between 1 and 10
-        const validatedRating = parseInt(rating);
-        if (isNaN(validatedRating) || validatedRating < 1 || validatedRating > 5) {
-            return res.status(400).json({ message: "Invalid rating. Please provide a rating between 1 and 5." });
-        }
-
         // Create a new company with imageUrl, email, and password
-        const newCompany = new Company({ name, imageUrl, email, password, years, rating: validatedRating, employees });
+        const newCompany = new Company({ name, imageUrl, email, password });
+
+        // Add optional fields if provided
+        if (years) newCompany.years = years;
+
+        // Check if rating is provided in req.body before adding it
+        if ('rating' in req.body) {
+            // Ensure the entered rating is between 1 and 10
+            const validatedRating = parseInt(req.body.rating);
+            if (isNaN(validatedRating) || validatedRating < 1 || validatedRating > 5) {
+                return res.status(400).json({ message: "Invalid rating. Please provide a rating between 1 and 5." });
+            }
+            newCompany.rating = validatedRating;
+        }
+
+        if (employees) newCompany.employees = employees;
 
         // Add the new company to the specialty
         specialty.company.push(newCompany);
@@ -77,6 +80,7 @@ router.post("/addCompaniesAndSignup/:SpecialtiesId", async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 });
+
 
 
 
