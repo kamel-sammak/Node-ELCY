@@ -106,7 +106,8 @@ router.get('/matchPostsToCV/:customerId', async (req, res, next) => {
                         postTitle: post.title,
                         content: post.content
                         //similarity: jaccardSimilarity,
-                        //Skills: post.Skills
+                        //Skills: post.Skills,
+                        
                     };
 
                     matchedResults.push(matchResult);
