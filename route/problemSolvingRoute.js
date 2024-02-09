@@ -11,13 +11,11 @@ router.post('/problems/:createdBy/:assignedTo', async (req, res) => {
         const { createdBy, assignedTo } = req.params;
         const { title, description, priority } = req.body;
 
-        // Check if createdBy is a valid customer ID
         const isCustomer = await Customer.findById(createdBy);
         if (!isCustomer) {
             return res.status(400).json({ message: 'Invalid customer ID for createdBy' });
         }
 
-        // Check if assignedTo is a valid admin ID
         const isAdmin = await Admin.findById(assignedTo);
         if (!isAdmin) {
             return res.status(400).json({ message: 'Invalid admin ID for assignedTo' });
@@ -79,13 +77,11 @@ router.put('/addComment/:createdBy/:id', async (req, res) => {
         const { status, commentText } = req.body;
         const { createdBy } = req.params;
 
-        // Check if createdBy is a valid admin ID
         const isAdmin = await Admin.findById(createdBy);
         if (!isAdmin) {
             return res.status(400).json({ message: 'Invalid admin ID for createdBy' });
         }
 
-        // Check if the comment text is provided
         if (!commentText) {
             return res.status(400).json({ message: 'Comment text is required' });
         }

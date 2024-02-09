@@ -7,7 +7,7 @@ const Image = require('../models/imageModels');
 const Storage = multer.diskStorage({
   destination: "uploads",
   filename: (req, file, cb) => {
-    // Modify the filename to be the entered name with the image suffix
+
     const modifiedFileName = req.body.name + path.extname(file.originalname);
     cb(null, modifiedFileName);
   },

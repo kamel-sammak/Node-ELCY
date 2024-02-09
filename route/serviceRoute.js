@@ -138,22 +138,5 @@ router.delete("/deleteService/:id", async (request, response) => {
 });
 
 
-router.delete("/deleteService1/:name", async (request, response) => {
-    try {
-        const { name } = request.params;
-        const service = await Service.findOneAndDelete({ name });
-
-        if (!service) {
-            return response.status(404).json({ message: "Service not found" });
-        }
-
-        await Image.findOneAndDelete({ name });
-
-        response.status(200).json({ message: `Deleted service: ${service.name}` });
-    } catch (error) {
-        response.status(500).json({ message: error.message });
-    }
-});
-
 
 module.exports = router;

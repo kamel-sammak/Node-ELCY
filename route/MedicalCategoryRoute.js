@@ -4,14 +4,11 @@ const Service = require("../models/serviceModels");
 const MedicalCategory = require("../models/MedicalCategoryModels");
 
 
-
-
 router.post("/addMedicalCategory/:serviceId", async (request, response) => {
     try {
         const { name, imageUrl } = request.body;
         const { serviceId } = request.params;
 
-        // Check if a MedicalCategory with a similar name already exists within the specified serviceId
         const existingSimilarMedicalCategory = await MedicalCategory.findOne({
             name: { $regex: new RegExp(`^${name}$`, 'i') },
             serviceId
@@ -21,14 +18,12 @@ router.post("/addMedicalCategory/:serviceId", async (request, response) => {
             return response.status(400).json({ message: "MedicalCategory with a similar name already exists for this service" });
         }
 
-        // Check if the specified serviceId exists in the Service collection
         const existingService = await Service.findById(serviceId);
 
         if (!existingService) {
             return response.status(400).json({ message: "Service with the specified ID not found" });
         }
 
-        // If no existing MedicalCategory and service, create a new category
         const medicalCategory = await MedicalCategory.create({ name, serviceId, imageUrl });
 
         response.status(200).json({ name, serviceId, imageUrl });
@@ -43,11 +38,9 @@ router.get("/getAllMedicalCategory/:id", async (request, response) => {
     try {
         const { id } = request.params;
 
-        // Assuming there's a serviceId field in the Category model
         const medicalCategory = await MedicalCategory.find({ serviceId: id });
 
         if (medicalCategory.length > 0) {
-            // Map each medicalCategory object to the desired format
             const formattedMedicalCategories = medicalCategory.map(medicalCategory => ({
                 id: medicalCategory._id,
                 name: medicalCategory.name,

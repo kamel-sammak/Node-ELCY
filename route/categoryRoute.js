@@ -17,7 +17,7 @@ const Image = require('../models/imageModels');
 //       cb(null, modifiedFileName);
 //     },
 //   });
-  
+
 //   const upload = multer({
 //     storage: Storage
 //   }).single('image');
@@ -86,21 +86,18 @@ router.post("/addCategory/:serviceId", async (request, response) => {
         const { name, imageUrl } = request.body;
         const { serviceId } = request.params;
 
-        // Check if a category with the same name already exists
         const existingCategory = await Category.findOne({ name });
 
         if (existingCategory) {
             return response.status(400).json({ message: "Category with the same name already exists" });
         }
 
-        // Check if the specified serviceId exists in the Service collection
         const existingService = await Service.findById(serviceId);
 
         if (!existingService) {
             return response.status(400).json({ message: "Service with the specified ID not found" });
         }
 
-        // If no existing category and service, create a new category with only name and serviceId
         await Category.create({ name, serviceId, imageUrl });
 
         response.status(200).json({ name, serviceId, imageUrl });
@@ -137,16 +134,13 @@ router.get("/getAllCategory/:id", async (request, response) => {
     try {
         const { id } = request.params;
 
-        // Assuming there's a serviceId field in the Category model
         const categories = await Category.find({ serviceId: id });
 
         if (categories.length > 0) {
-            // Map each category object to the desired format
             const formattedCategories = categories.map(category => ({
                 id: category._id,
                 name: category.name,
                 imageUrl: category.imageUrl
-                // Add other fields as needed
             }));
 
             response.status(200).json({ categories: formattedCategories });
@@ -185,16 +179,13 @@ router.put("/editCategory/:id", async (request, response) => {
         const { id } = request.params;
         const { name, imageUrl } = request.body;
 
-        // Check if a category with the same name already exists
         const existingCategory = await Category.findOne({ name });
         if (existingCategory && existingCategory._id != id) {
             return response.status(400).json({ message: `Category with name ${name} already exists!` });
         }
 
-        // Find the category by ID
         const category = await Category.findByIdAndUpdate(id, { name, imageUrl }, { new: true }).select('name imageUrl');
 
-        // If the category does not exist, return a 404 response
         if (!category) {
             return response.status(404).json({ message: `Cannot find category with id ${id}!` });
         }
@@ -232,21 +223,18 @@ router.post("/addSpecialtiesToCategory/:idCategory", async (request, response) =
         const { name, imageUrl } = request.body;
         const { idCategory } = request.params;
 
-        // Check if the specified Category Specialties exists
         const existingSpecialties = await Category.findById(idCategory);
 
         if (!existingSpecialties) {
             return response.status(400).json({ message: "Category specialties with the specified ID not found" });
         }
 
-        // Check if a specialties with the same name already exists
         const specialtiesWithSameName = existingSpecialties.specialties.find(specialties => specialties.name === name);
 
         if (specialtiesWithSameName) {
             return response.status(400).json({ message: "A specialties with the same name already exists in the Category" });
         }
 
-        // Add the new item to the "all" array
         existingSpecialties.specialties.push({ name, imageUrl });
         const updatedSpecialties = await existingSpecialties.save();
 
@@ -264,7 +252,7 @@ router.get("/getAllSpecialties/:id", async (req, res) => {
 
         if (category) {
             const { _id, specialties } = category;
-            // Remove the 'company' field from each specialty
+
             const modifiedSpecialties = specialties.map(({ imageUrl, name, _id }) => ({ name, _id, imageUrl }));
 
             res.status(200).json({ _id, specialties: modifiedSpecialties });
@@ -281,28 +269,20 @@ router.put("/updateSpecialties/:SpecialtiesId", async (request, response) => {
         const { name, imageUrl } = request.body;
         const { SpecialtiesId } = request.params;
 
-        // Check if the specified Specialties exists
         const existingSpecialties = await Category.findOne({ 'specialties._id': SpecialtiesId });
 
         if (!existingSpecialties) {
             return response.status(400).json({ message: "Specialties with the specified ID not found" });
         }
 
-        // Find the Specialties within the category with the specified SpecialtiesId
         const existingItem = existingSpecialties.specialties.find(specialties => specialties._id.toString() === SpecialtiesId);
 
-        if (!existingItem) {
-            return response.status(400).json({ message: "Specialties with the specified ID not found in the category" });
-        }
-
-        // Check if a group with the same name already exists (excluding the current group)
         const groupWithSameName = existingSpecialties.specialties.find(specialties => specialties.name === name && specialties._id.toString() !== SpecialtiesId);
 
         if (groupWithSameName) {
             return response.status(400).json({ message: "A Specialties with the same name already exists in the Category" });
         }
 
-        // Update the item in the "all" array
         existingItem.name = name;
         existingItem.imageUrl = imageUrl;
         await existingSpecialties.save();
@@ -318,22 +298,13 @@ router.delete("/deleteSpecialties/:SpecialtiesId", async (request, response) => 
     try {
         const { SpecialtiesId } = request.params;
 
-        // Check if the specified pharmacy specialties exists
         const existingSpecialties = await Category.findOne({ 'specialties._id': SpecialtiesId });
 
         if (!existingSpecialties) {
-            return response.status(400).json({ message: "Pharmacy specialties with the specified ID not found" });
+            return response.status(400).json({ message: "specialties with the specified ID not found" });
         }
 
-        // Find the index of the specialties within the medical category with the specified SpecialtiesId
-        const specialtiesIndex = existingSpecialties.specialties.findIndex(specialties => specialties._id.toString() === SpecialtiesId);
-
-        if (specialtiesIndex === -1) {
-            return response.status(400).json({ message: "specialties with the specified ID not found in the pharmacy" });
-        }
-
-        // Remove the item from the "all" array
-        existingSpecialties.specialties.splice(specialtiesIndex, 1);
+        existingSpecialties.specialties = existingSpecialties.specialties.filter(specialty => specialty._id.toString() !== SpecialtiesId);
         await existingSpecialties.save();
 
         response.status(200).json({ message: "Deleted Item In specialties" });
@@ -341,8 +312,6 @@ router.delete("/deleteSpecialties/:SpecialtiesId", async (request, response) => 
         response.status(500).json({ message: error.message });
     }
 });
-
-
 
 
 module.exports = router;

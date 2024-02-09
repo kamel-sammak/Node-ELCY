@@ -12,12 +12,10 @@ router.post("/loginFlutter", async (request, response) => {
     try {
         const { email, password } = request.body;
 
-        // Validate email format
         if (!email || !email.includes('@')) {
             return response.status(400).json({ error: "Invalid email format" });
         }
 
-        // Validate password length
         if (!password || password.length < 8) {
             return response.status(400).json({ error: "Password must be at least 8 characters long" });
         }

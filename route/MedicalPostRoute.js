@@ -9,36 +9,24 @@ router.post("/addPostToGroup/:groupId", async (req, res) => {
         const { groupId } = req.params;
         const { title, content } = req.body;
 
-        // Find the medical category with the specified groupId
         const medicalCategory = await MedicalCategory.findOne({ "group._id": groupId });
 
         if (!medicalCategory) {
             return res.status(404).json({ message: "Medical category with the specified groupId not found" });
         }
 
-        // Find the group within the medical category with the specified groupId
         const foundGroup = medicalCategory.group.find(group => group._id.toString() === groupId);
 
-        if (!foundGroup) {
-            return res.status(404).json({ message: "Group with the specified groupId not found in the medical category" });
-        }
-
-        // Assuming you have a 'schedule' field in the Group model
         foundGroup.schedule = foundGroup.schedule || [];
 
-        // Create a new MedicalPost instance and associate it with the group
         const newMedicalPost = new MedicalPost({ title, content });
 
-        // Add the groupId to the newMedicalPost
         newMedicalPost.group = groupId;
 
-        // Add the new MedicalPost to the schedule
         foundGroup.schedule.push(newMedicalPost);
 
-        // Save the updated category and the new MedicalPost
         await Promise.all([medicalCategory.save(), newMedicalPost.save()]);
 
-        // Include groupId in the response
         res.status(200).json(newMedicalPost);
     } catch (error) {
         console.error(error.message);

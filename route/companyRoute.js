@@ -11,54 +11,42 @@ router.post("/addCompaniesAndSignup/:SpecialtiesId", async (req, res) => {
         const { name, imageUrl, email, password, years, employees } = req.body;
         const { SpecialtiesId } = req.params;
 
-        // Find the category with the specified specialty
         const category = await Category.findOne({ "specialties._id": SpecialtiesId });
 
         if (!category) {
             return res.status(404).json({ message: "Specialty with the specified ID not found in any category" });
         }
 
-        // Find the specialty within the category
         const specialty = category.specialties.find(spec => spec._id.toString() === SpecialtiesId);
 
-        if (!specialty) {
-            return res.status(404).json({ message: "Specialty with the specified ID not found in the category" });
-        }
-
-        // Check if a company with the same name already exists in the specialty
         const existingCompany = specialty.company.find(company => company.name === name);
 
         if (existingCompany) {
             return res.status(400).json({ message: "A company with the same name already exists in the specialty" });
         }
 
-        // Check if a company with the same email already exists in the specialty
         const companyWithSameEmail = specialty.company.find(company => company.email === email);
 
         if (companyWithSameEmail) {
             return res.status(400).json({ message: "A user with the same email already exists in the specialty. Please choose a different one or log in." });
         }
 
-        // Validate email format
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             return res.status(400).json({ message: "Invalid email format. Please provide a valid email address with exactly one '@' symbol." });
         }
 
-        // Validate password length
         if (password.length < 8) {
             return res.status(400).json({ message: "Password must be at least 8 characters long." });
         }
 
-        // Create a new company with imageUrl, email, and password
         const newCompany = new Company({ name, imageUrl, email, password });
 
         // Add optional fields if provided
         if (years) newCompany.years = years;
+        if (employees) newCompany.employees = employees;
 
-        // Check if rating is provided in req.body before adding it
         if ('rating' in req.body) {
-            // Ensure the entered rating is between 1 and 10
             const validatedRating = parseInt(req.body.rating);
             if (isNaN(validatedRating) || validatedRating < 1 || validatedRating > 5) {
                 return res.status(400).json({ message: "Invalid rating. Please provide a rating between 1 and 5." });
@@ -66,12 +54,8 @@ router.post("/addCompaniesAndSignup/:SpecialtiesId", async (req, res) => {
             newCompany.rating = validatedRating;
         }
 
-        if (employees) newCompany.employees = employees;
-
-        // Add the new company to the specialty
         specialty.company.push(newCompany);
 
-        // Save the updated category
         await category.save();
 
         res.status(200).json(newCompany);
@@ -80,73 +64,6 @@ router.post("/addCompaniesAndSignup/:SpecialtiesId", async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 });
-
-
-
-
-
-// router.post("/addCompanies", async (req, res) => {
-//     try {
-//         const { SpecialtiesId, name, imageUrl } = req.body;
-//         const category = await Category.findOne({ "specialties._id": SpecialtiesId });
-
-//         if (!category) {
-//             return res.status(404).json({ message: "Specialty with the specified ID not found in any category" });
-//         }
-
-//         const specialty = category.specialties.find(spec => spec._id.toString() === SpecialtiesId);
-
-//         if (!specialty) {
-//             return res.status(404).json({ message: "Specialty with the specified ID not found in the category" });
-//         }
-
-//         // Check if a company with the same name already exists in the specialty
-//         const existingCompany = specialty.company.find(company => company.name === name);
-
-//         if (existingCompany) {
-//             return res.status(400).json({ message: "A company with the same name already exists in the specialty" });
-//         }
-
-//         // Create a new company with imageUrl
-//         const newCompany = new Company({ name, imageUrl });
-
-//         // Add the new company to the specialty
-//         specialty.company.push(newCompany);
-
-//         // Save the updated category
-//         await category.save();
-
-//         res.status(200).json(newCompany);
-//     } catch (error) {
-//         console.error(error.message);
-//         res.status(500).json({ message: error.message });
-//     }
-// });
-
-
-
-
-// router.get("/getAllCompanies/:id", async (req, res) => {
-//     try {
-//         const { id } = req.params;
-//         const categories = await Category.find();
-//         var findCat = false;
-//         var allCompanies = []
-//         categories.forEach(category => {
-//             findCat = true
-
-//             category.specialties.forEach(specialtie => {
-//                 if (id == specialtie._id)
-//                     allCompanies = specialtie.company
-//             });
-//         });
-//         if (findCat) res.status(200).json(allCompanies);
-//         else res.status(404).json({ message: "can't find category" });
-//     } catch (error) {
-//         res.status(500).json({ message: error.message });
-//     }
-// });
-
 
 
 
@@ -174,7 +91,6 @@ router.get("/getAllCompanies/:id", async (req, res) => {
                 allCompanies[i].NumberPost = posts.length;
             }
 
-            // Extract only name and imageUrl from each company
             const simplifiedCompanies = allCompanies.map(company => ({
                 id: company.id,
                 name: company.name,
@@ -185,7 +101,6 @@ router.get("/getAllCompanies/:id", async (req, res) => {
                 NumberPost: company.NumberPost
             }));
 
-            // Sort companies based on the "rating" field in descending order
             simplifiedCompanies.sort((a, b) => b.rating - a.rating);
 
             res.status(200).json(simplifiedCompanies);
@@ -196,7 +111,6 @@ router.get("/getAllCompanies/:id", async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 });
-
 
 
 router.get("/getCompany_info/:companyId", async (req, res) => {
@@ -217,7 +131,7 @@ router.get("/getCompany_info/:companyId", async (req, res) => {
                             employees: company.employees,
                             rating: company.rating
                         };
-                        return; // Break out of the loop if company is found
+                        return; 
                     }
                 });
             });
@@ -235,38 +149,11 @@ router.get("/getCompany_info/:companyId", async (req, res) => {
 
 
 
-
-// router.post("/addCompaniesNew", async (req, res) => {
-//     try {
-//         const { id , name } = req.body;
-//         const categories = await Category.find();
-//         // const newCat = {}
-//         var newCategory
-//         categories.forEach(category => {
-//             category.specialties.forEach(specialtie => {
-//                 if(id == specialtie._id)
-//                 specialtie.company.push({"name" : name})
-//                 newCategory = Category.findByIdAndUpdate(category._id, category);
-//             });
-
-//             res.status(200).json(newCategory);
-//         });
-//         // if (category) res.status(200).json(category);
-//         // else res.status(404).json({ message: "can't find category" });
-//     } catch (error) {
-//         res.status(500).json({ message: error.message });
-//     }
-// });
-
-
-
-
 router.put("/updateCompanyName/:companyId", async (req, res) => {
     try {
         const { companyId } = req.params;
         const { newName } = req.body;
 
-        // Find the category and specialty containing the company
         const category = await Category.findOne({ "specialties.company._id": companyId });
 
         if (!category) {
@@ -275,20 +162,14 @@ router.put("/updateCompanyName/:companyId", async (req, res) => {
 
         const specialty = category.specialties.find(spec => spec.company.some(company => company._id.toString() === companyId));
 
-        if (!specialty) {
-            return res.status(404).json({ message: "Company not found in the specialty" });
-        }
-
-        // Find the company and update its name
         const companyToUpdate = specialty.company.find(company => company._id.toString() === companyId);
 
         if (!companyToUpdate) {
             return res.status(404).json({ message: "Company not found" });
         }
-
+        
         companyToUpdate.name = newName;
 
-        // Save the updated category
         await category.save();
 
         res.status(200).json({ message: "Company name updated successfully", updatedCompany: companyToUpdate });
