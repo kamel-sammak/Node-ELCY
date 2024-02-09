@@ -19,7 +19,7 @@ router.post("/addItemAndSignup/:idPharmacies", async (request, response) => {
         const groupWithSameName = existingGroup.group.find(group => group.name === name);
 
         if (groupWithSameName) {
-            return response.status(400).json({ message: "A group with the same name already exists in the pharmacy" });
+            return response.status(400).json({ message: "A group with the same name already exists in the item" });
         }
 
         // Validate email format

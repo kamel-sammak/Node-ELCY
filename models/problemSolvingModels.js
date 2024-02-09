@@ -3,11 +3,11 @@ const problemSolvingSchema = new mongoose.Schema({
 
     title: {
         type: String,
-        required: true,
+        required: [true, "please enter user title !"]
     },
     description: {
         type: String,
-        required: true,
+        required: [true, "please enter user description !"]
     },
     status: {
         type: String,
@@ -18,6 +18,8 @@ const problemSolvingSchema = new mongoose.Schema({
         type: String,
         enum: ['low', 'medium', 'high'],
         default: 'medium',
+        required: [true, "please enter user priority !"]
+
     },
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,

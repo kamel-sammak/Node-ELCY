@@ -6,7 +6,7 @@ const Customer = require("../models/customerModels.js");
 
 router.get("/getAllCustomer", async (request, response) => {
     try {
-        const customer = await Customer.find({}); 
+        const customer = await Customer.find({});
         if (customer.length > 0) {
             response.status(200).json({ customer });
         } else {
@@ -65,7 +65,7 @@ router.put("/editCustomerFlutter/:id", async (request, response) => {
 
         const newCustomer = await customer.save();
 
-        response.status(200).json(newCustomer);
+        response.status(200).json("Modified successfully");
 
     } catch (error) {
         response.status(500).json({ message: error.message });

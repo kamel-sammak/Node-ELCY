@@ -113,7 +113,7 @@ router.put("/editService/:id", async (request, response) => {
             response.status(404).json({ message: `cannot find user with id ${id} !` });
         else {
             const newService = await Service.findById(id);
-            response.status(200).json(newService);
+            response.status(200).json("Modified successfully");
         }
     } catch (error) {
         response.status(500).json({ message: error.message });

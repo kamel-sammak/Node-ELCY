@@ -11,18 +11,21 @@ router.post("/addMedicalCategory/:serviceId", async (request, response) => {
         const { name, imageUrl } = request.body;
         const { serviceId } = request.params;
 
-        // Check if a MedicalCategory with the same name already exists
-        const existingMedicalCategory = await MedicalCategory.findOne({ name });
+        // Check if a MedicalCategory with a similar name already exists within the specified serviceId
+        const existingSimilarMedicalCategory = await MedicalCategory.findOne({
+            name: { $regex: new RegExp(`^${name}$`, 'i') },
+            serviceId
+        });
 
-        if (existingMedicalCategory) {
-            return response.status(400).json({ message: "MedicalCategory with the same name already exists" });
+        if (existingSimilarMedicalCategory) {
+            return response.status(400).json({ message: "MedicalCategory with a similar name already exists for this service" });
         }
 
         // Check if the specified serviceId exists in the Service collection
         const existingService = await Service.findById(serviceId);
 
         if (!existingService) {
-            return response.status(400).json({ message: "Service with the All ID not found" });
+            return response.status(400).json({ message: "Service with the specified ID not found" });
         }
 
         // If no existing MedicalCategory and service, create a new category
@@ -33,6 +36,7 @@ router.post("/addMedicalCategory/:serviceId", async (request, response) => {
         response.status(500).json({ message: error.message });
     }
 });
+
 
 
 router.get("/getAllMedicalCategory/:id", async (request, response) => {

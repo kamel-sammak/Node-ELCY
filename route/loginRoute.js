@@ -62,64 +62,6 @@ function generateRefreshToken(customer) {
 
 
 
-// router.post("/loginCompany", async (req, res) => {
-//     try {
-//         const { email, password } = req.body;
-
-//         const categories = await Category.find();
-//         let authenticatedCompany = null;
-
-//         categories.forEach(category => {
-//             category.specialties.forEach(specialty => {
-//                 const company = specialty.company.find(company => company.email === email);
-
-//                 if (company && company.password === password) {
-//                     authenticatedCompany = company;
-//                 }
-//             });
-//         });
-
-//         if (authenticatedCompany) {
-//             // Generate a JWT token for authentication
-//             const token = jwt.sign({ companyId: authenticatedCompany._id }, 'your-secret-key', { expiresIn: '1h' });
-//             res.status(200).json({ token, companyId: authenticatedCompany._id });
-//         } else {
-//             res.status(401).json({ message: "Invalid email or password" });
-//         }
-//     } catch (error) {
-//         console.error(error.message);
-//         res.status(500).json({ message: error.message });
-//     }
-// });
-
-// router.post("/loginGroup", async (req, res) => {
-//     try {
-//         const { email, password } = req.body;
-
-//         const medicalCategories = await MedicalCategory.find();
-//         let authenticatedGroup = null;
-
-//         medicalCategories.forEach(medicalCategory => {
-//             const group = medicalCategory.group.find(group => group.email === email);
-
-//             if (group && group.password === password) {
-//                 authenticatedGroup = group;
-//             }
-//         });
-
-//         if (authenticatedGroup) {
-//             // Generate a JWT token for authentication
-//             const token = jwt.sign({ groupId: authenticatedGroup._id }, 'your-secret-key', { expiresIn: '1h' });
-//             res.status(200).json({ token, groupId: authenticatedGroup._id });
-//         } else {
-//             res.status(401).json({ message: "Invalid email or password" });
-//         }
-//     } catch (error) {
-//         console.error(error.message);
-//         res.status(500).json({ message: error.message });
-//     }
-// });
-
 
 router.post("/loginVueJS", async (req, res) => {
     try {
